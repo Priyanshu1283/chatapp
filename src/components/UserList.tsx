@@ -69,14 +69,15 @@ export function UserList({
   }, [search, setUsers, socketConnected]);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="p-2 border-b border-white/5">
+    <div className="flex flex-col h-full w-full">
+      <div className="p-3 sm:p-2 border-b border-white/5 shrink-0">
+        <h2 className="text-sm font-medium text-gray-400 mb-2 md:hidden">Chats</h2>
         <input
           type="search"
           placeholder="Search by username..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg bg-surface border border-white/10 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none"
+          className="w-full rounded-xl bg-surface border border-white/10 px-4 py-3 text-base md:text-sm text-white placeholder-gray-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none touch-manipulation"
         />
       </div>
       <div className="flex-1 overflow-auto scrollbar-thin">
@@ -87,16 +88,16 @@ export function UserList({
             {search ? "No users match your search." : "No other users yet."}
           </div>
         ) : (
-          <ul className="p-2 space-y-1">
+          <ul className="p-2 sm:p-2 space-y-1">
             {users.map((user) => (
               <motion.li
                 key={user.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition ${
+                className={`flex items-center gap-3 p-4 sm:p-3 rounded-xl cursor-pointer transition active:scale-[0.98] touch-manipulation ${
                   selectedUser?.id === user.id
                     ? "bg-primary-600/30 text-white"
-                    : "hover:bg-white/5"
+                    : "hover:bg-white/5 active:bg-white/10"
                 }`}
                 onClick={() => onSelectUser(user)}
               >

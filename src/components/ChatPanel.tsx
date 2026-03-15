@@ -21,7 +21,7 @@ function MessageBubble({
       className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
     >
       <div
-        className={`max-w-[75%] rounded-2xl px-4 py-2 ${
+        className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-2.5 ${
           isOwn
             ? "bg-primary-600 text-white rounded-br-md"
             : "bg-surface-light text-gray-100 rounded-bl-md"
@@ -59,7 +59,13 @@ function ChatSkeleton() {
   );
 }
 
-export function ChatPanel({ user }: { user: ChatUser | null }) {
+export function ChatPanel({
+  user,
+  onBack,
+}: {
+  user: ChatUser | null;
+  onBack?: () => void;
+}) {
   const { data: session } = useSession();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
@@ -169,9 +175,21 @@ export function ChatPanel({ user }: { user: ChatUser | null }) {
   }
 
   return (
-    <div className="flex flex-col flex-1 min-w-0 bg-surface">
-      <div className="h-14 px-4 flex items-center border-b border-white/5 shrink-0">
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col flex-1 min-w-0 bg-surface w-full h-full">
+      <div className="h-14 min-h-[52px] px-3 sm:px-4 flex items-center gap-2 border-b border-white/5 shrink-0">
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="md:hidden p-2 -ml-1 rounded-lg hover:bg-white/5 text-gray-300 hover:text-white transition touch-manipulation"
+            aria-label="Back to chats"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           {user.avatar ? (
             <img
               src={user.avatar}
@@ -189,7 +207,7 @@ export function ChatPanel({ user }: { user: ChatUser | null }) {
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-auto scrollbar-thin p-4 space-y-3">
+      <div className="flex-1 overflow-auto scrollbar-thin p-4 space-y-3 min-h-0">
         {loading ? (
           <ChatSkeleton />
         ) : list.length === 0 ? (
@@ -215,7 +233,7 @@ export function ChatPanel({ user }: { user: ChatUser | null }) {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <div className="p-3 border-t border-white/5">
+      <div className="p-3 sm:p-3 border-t border-white/5 shrink-0 safe-area-pb">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -231,12 +249,12 @@ export function ChatPanel({ user }: { user: ChatUser | null }) {
               handleTyping();
             }}
             placeholder="Type a message..."
-            className="flex-1 rounded-xl bg-surface-light border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none"
+            className="flex-1 rounded-xl bg-surface-light border border-white/10 px-4 py-3 text-base md:py-2.5 text-white placeholder-gray-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none touch-manipulation"
           />
           <button
             type="submit"
             disabled={!input.trim()}
-            className="rounded-xl bg-primary-600 px-4 py-2.5 text-white font-medium hover:bg-primary-500 disabled:opacity-50 transition"
+            className="rounded-xl bg-primary-600 px-4 py-3 md:py-2.5 text-white font-medium hover:bg-primary-500 disabled:opacity-50 transition touch-manipulation min-w-[72px]"
           >
             Send
           </button>

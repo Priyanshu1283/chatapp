@@ -12,6 +12,11 @@ body {
   background: var(--background);
 }
 
+/* Safe area for mobile notches/home indicator */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
 /* Custom scrollbar */
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { UserList } from "@/components/UserList";
 import { ChatPanel } from "@/components/ChatPanel";
 import { useChatStore, type ChatUser } from "@/store/chatStore";
 
 function DashboardContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const chatUserId = searchParams.get("chat");
   const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
@@ -25,18 +26,38 @@ function DashboardContent() {
   const handleSelectUser = (user: ChatUser) => {
     setSelectedUser(user);
     setStoreSelected(user);
+    router.replace(`/dashboard?chat=${user.id}`);
+  };
+
+  const handleBackToList = () => {
+    setSelectedUser(null);
+    setStoreSelected(null);
+    router.replace("/dashboard");
   };
 
   return (
     <>
-      <aside className="w-full md:w-80 lg:w-96 border-r border-white/5 flex flex-col shrink-0">
+      {/* Mobile: show user list OR chat (full screen) */}
+      <aside
+        className={`w-full md:w-80 lg:w-96 border-r border-white/5 flex-col shrink-0
+          ${selectedUser ? "hidden md:flex" : "flex"}
+        `}
+      >
         <UserList
           onSelectUser={handleSelectUser}
           selectedUser={selectedUser}
         />
       </aside>
-      <section className="flex-1 flex min-w-0">
-        <ChatPanel user={selectedUser} />
+      {/* Mobile: chat full screen when selected; Desktop: always visible */}
+      <section
+        className={`flex-1 flex min-w-0 min-h-0
+          ${selectedUser ? "flex" : "hidden md:flex"}
+        `}
+      >
+        <ChatPanel
+          user={selectedUser}
+          onBack={selectedUser ? handleBackToList : undefined}
+        />
       </section>
     </>
   );
